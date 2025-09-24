@@ -1,0 +1,132 @@
+@import '~@fluentui/react/dist/sass/References.scss';
+
+.softwarecatlogue2025 {
+  overflow: hidden;
+  padding: 1em;
+  color: "[theme:bodyText, default: #323130]";
+  color: var(--bodyText);
+  &.teams {
+    font-family: $ms-font-family-fallbacks;
+  }
+}
+
+.HeadLable {
+  font-size: 18px;
+ font-family: Cambria;
+
+}
+
+.welcome {
+  text-align: center;
+}
+
+.welcomeImage {
+  width: 100%;
+  max-width: 420px;
+}
+
+.Approvebutton {
+  width: 20%;
+  max-width: 420px;
+}
+
+.Divsection
+{
+
+  padding:10px;
+
+
+}
+
+
+.DivsectionComments
+{
+
+  padding:1px;
+
+  width:80%
+
+
+}
+
+
+
+.recolorss
+{
+
+  color: #FF0000;
+}
+
+.onlyFont
+{
+
+  font-family: "Cambria";
+  font-size: medium;
+
+}
+
+.boxsize
+{
+
+ 
+  width: 40%;
+
+  height:25px;
+
+  font-size: medium;
+
+  font-family: "Cambria";
+
+  font-weight: $ms-font-weight-regular;
+
+}
+
+.labelsFonts
+{
+
+  font-size: 14px;
+
+  font-family: Cambria;
+
+ 
+}
+
+.boxsize1
+{
+
+ 
+  width: 43%;
+
+  height:40px;
+
+  font-size: medium;
+
+  font-family: "Cambria";
+
+  font-weight: $ms-font-weight-regular;
+
+}
+
+.recolorss
+{
+
+  color: #FF0000;
+}
+
+
+.Pepsize
+{
+
+ 
+
+  width: 25%;
+
+  height:15px;
+
+  font-size: medium;
+
+  font-family: "Cambria";
+
+  font-weight: $ms-font-weight-regular;
+
+}

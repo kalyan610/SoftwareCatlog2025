@@ -1,0 +1,19 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "softwarecatlogue-2025-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/softwarecatlogue2025/Softwarecatlogue2025WebPart.js",
+          "manifest": "./src/webparts/softwarecatlogue2025/Softwarecatlogue2025WebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "Softwarecatlogue2025WebPartStrings": "lib/webparts/softwarecatlogue2025/loc/{locale}.js",
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js"
+  }
+}

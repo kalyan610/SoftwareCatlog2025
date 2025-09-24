@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "softwarecatlogue-2025-client-side-solution",
+    "id": "6b5594a7-d871-4f0c-877b-d33f13b85322",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.20.0"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "softwarecatlogue2025 description"
+      },
+      "longDescription": {
+        "default": "softwarecatlogue2025 description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "softwarecatlogue-2025 Feature",
+        "description": "The feature that activates elements of the softwarecatlogue-2025 solution.",
+        "id": "135508de-77c2-4edc-92eb-f38735e4062a",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/softwarecatlogue-2025.sppkg"
+  }
+}
