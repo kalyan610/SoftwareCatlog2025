@@ -371,10 +371,12 @@ const Item: any[] = await sp.web.lists.getByTitle(selectedList).items.select("*,
         MyAvailabilityKey:Number,
 
         DescriptionVal:string,
+
         ExplicitUseCaseVal:string,
-        MyExplicitUsecaseKey:Number,
+        MyExplicitUsecaseKey:string,
+
         SoftwareRestrictionVal:string,
-        MySoftwareRestrictionKey:Number,
+        MySoftwareRestrictionKey:string,
 
       SoftwareRestrictionNotesVal:string,
       PublisherVal:String,
@@ -396,7 +398,7 @@ const Item: any[] = await sp.web.lists.getByTitle(selectedList).items.select("*,
         MyDependencykey:Number,
 
         MyDataClassification:string,
-        MyDataClassificationKey:Number,
+        MyDataClassificationKey:string,
 
         MySoftwareMissioncrtical:string,
         MySoftwareMissionCriticalRatingkey:Number,
@@ -493,8 +495,10 @@ const Item: any[] = await sp.web.lists.getByTitle(selectedList).items.select("*,
             Availability:Availabilityval,
             AvailabilityKey:MyAvailabilityKey,
             field_4:DescriptionVal,
+
             ExplicitUsecase:ExplicitUseCaseVal,
             ExplicitUsecaseKey:MyExplicitUsecaseKey,
+
             SoftwareRestriction:SoftwareRestrictionVal,
             SoftwareRestrictionKey:MySoftwareRestrictionKey,
             field_7:SoftwareRestrictionNotesVal,
@@ -515,6 +519,7 @@ const Item: any[] = await sp.web.lists.getByTitle(selectedList).items.select("*,
 
             Dependency:MyDependecies,
             Dependencykey:MyDependencykey,
+
            DataClassification:MyDataClassification,
           DataClassificationKey:MyDataClassificationKey,
 
@@ -624,9 +629,9 @@ const Item: any[] = await sp.web.lists.getByTitle(selectedList).items.select("*,
 
         DescriptionVal:string,
         ExplicitUseCaseVal:string,
-        MyExplicitUsecaseKey:Number,
+        MyExplicitUsecaseKey:string,
         SoftwareRestrictionVal:string,
-        MySoftwareRestrictionKey:Number,
+        MySoftwareRestrictionKey:string,
 
       SoftwareRestrictionNotesVal:string,
       PublisherVal:String,
@@ -648,7 +653,7 @@ const Item: any[] = await sp.web.lists.getByTitle(selectedList).items.select("*,
         MyDependencykey:Number,
 
         MyDataClassification:string,
-        MyDataClassificationKey:Number,
+        MyDataClassificationKey:string,
 
         MySoftwareMissioncrtical:string,
         MySoftwareMissionCriticalRatingkey:Number,

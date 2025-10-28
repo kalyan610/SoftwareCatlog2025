@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styles from './Softwarecatlogue2025.module.scss';
 import type { ISoftwarecatlogue2025Props } from './ISoftwarecatlogue2025Props';
+import { ComboBox,IComboBoxOption,IComboBoxStyles } from 'office-ui-fabric-react/lib/ComboBox';
 
 import {Stack,IStackStyles} from 'office-ui-fabric-react'; 
 import { DatePicker } from 'office-ui-fabric-react/lib/DatePicker';
@@ -12,7 +13,7 @@ import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/People
 
 import { ChoiceGroup,IChoiceGroupOption } from 'office-ui-fabric-react'; 
 
-
+const comboBoxStyles: Partial<IComboBoxStyles> = { root: { maxWidth: 300 } };
 
 let defaultUsers:string[]=[];
 let  Myvalues:Array<string>=[];
@@ -28,8 +29,10 @@ let MyToogleValue='';
 //let Techowner='';
 let ReviewdBy='';
 
-let SoftwareRestriction='';
+//let SoftwareRestriction='';
 let BussinessOwnerText='';
+
+//let AllExplicitSavedIDString='';
 
 //Choices
 
@@ -37,13 +40,13 @@ let BussinessOwnerText='';
 
 let CategoryValue='';
 let AvaliblityText=''
-let ExplicitUseCase='';
+//let ExplicitUseCase='';
 let SoftwareScope='';
 let SoftwareEdition='';
 let LicenseType='';
 let TypeofAIcapabilities='';
 let Dependency='';
-let DataClassification='';
+//let DataClassification='';
 let SoftwareMissionCriticalRating='';
 let Risks='';
 let AuthenticationMethod='';
@@ -58,6 +61,45 @@ let EMPWorkstyle='';
 let SoftwareLocation='';
 
 //End
+//Explicit
+var AllExplicitUsecaseSelected:any=[];
+var AllExplicitSavedValues:any=[];
+var AllExplicitSavedIDValues:any=[];
+
+let AllExplicitFinalSavedValue='';
+let AllExplicitFinalSavedIDValue='';
+
+//End
+
+
+//SoftwareRestriction
+
+let AllDataSoftwareRestrictionSelected: { key: string; text: string }[] = [];
+let AllDataSoftwareRestrictionSavedValues: string[] = [];
+let AllDataSoftwareRestrictionSavedIDValues: string[] = [];
+let AllDataSoftwareRestrictionFinalSavedValue: string = "";
+let AllDataSoftwareRestrictionFinalSavedIDValue: string = "";
+
+//END
+
+
+
+//DataClassification
+
+var AllDataClassificationSelected:any=[];
+var AllDataClassificationSavedValues:any=[];
+var AllDataClassificationSavedIDValues:any=[];
+
+let AllDataClassificationFinalSavedValue='';
+let AllDataClassificationFinalSavedIDValue='';
+
+
+//END
+
+
+
+
+
 
 let FinalReviewDate='';
 let FinalNextReviewDate='';
@@ -226,6 +268,31 @@ showupdatebutton:boolean;
 
 TestValue:any;
 
+//Explicit
+ExplicitSelectArray:any;
+ExplicitSelectedTextArray:any;
+UpdateExplicitIdString:any;
+ExplicitFinalStringValue:any;
+//End
+
+//SoftwareRestriction
+SoftwareRestrictionSelectArray:any;
+SoftwareRestrictionSelectedTextArray:any;
+UpdateSoftwareRestrictionIdString:any;
+SoftwareRestrictionFinalStringValue:any;
+
+DataSoftwareRestrictionSelectArray: any;
+DataSoftwareRestrictionSelectedTextArray: any,
+//End
+
+
+//DataClassfication
+DataClassificationSelectArray:any;
+DataClassificationSelectedTextArray:any;
+UpdateDataClassificationIdString:any;
+DataClassificationFinalStringValue:any;
+//End
+
 
 }
 
@@ -369,7 +436,28 @@ export default class Softwarecatlogue2025 extends React.Component<ISoftwarecatlo
 showSavebutton:true,
 showupdatebutton:false,
 
-TestValue:""
+TestValue:"",
+
+
+ExplicitSelectArray:[],
+ExplicitSelectedTextArray:[],
+UpdateExplicitIdString:"",
+ExplicitFinalStringValue:"",
+
+
+SoftwareRestrictionSelectArray:[],
+SoftwareRestrictionSelectedTextArray:[],
+UpdateSoftwareRestrictionIdString:"",
+SoftwareRestrictionFinalStringValue:"",
+
+
+DataClassificationSelectArray:[],
+DataClassificationSelectedTextArray:[],
+UpdateDataClassificationIdString:"",
+DataClassificationFinalStringValue:"",
+
+DataSoftwareRestrictionSelectArray: [],
+ DataSoftwareRestrictionSelectedTextArray: [],
     
      
     };
@@ -383,6 +471,7 @@ TestValue:""
     
 
     this.GetAllAllSoftwareRestrictions();
+    this.GetAllSoftwareRestrictions();
     this.GetAllAllExplicitUsecase();
     this.GetAllSoftwareScope();
     this.GetAllSoftwareEditions();
@@ -446,6 +535,28 @@ TestValue:""
 
   //LookUp
 
+  public async GetAllSoftwareRestrictions()
+  {
+
+
+        var data = await this._service.GetAllSoftwareRestrictions();
+  
+      console.log(data);
+  
+      var AllSoftwareRestrictions: any = [];
+  
+      for (var k in data) {
+  
+        AllSoftwareRestrictions.push({ key: data[k].ID, text: data[k].Title});
+      }
+  
+      console.log(AllSoftwareRestrictions);
+  
+      
+     this.setState({ SoftwareRestrictionItems: AllSoftwareRestrictions });
+
+  }
+
   public async GetAllAllSoftwareRestrictions() {
 
           
@@ -465,21 +576,48 @@ TestValue:""
       this.setState({showSavebutton:false})
       this.setState({showupdatebutton:true})
 
+      //if (ItemInfo.Title == 'Five')
       if (ItemInfo.Title != '')
       {
+
+
+     this.setState({ExplicitSelectArray:ItemInfo.ExplicitUsecaseKey.split(',').map(Number)});
+    this.setState({ExplicitSelectedTextArray:ItemInfo.ExplicitUsecase.split(',')});
+    
+    //this.handleDomainsTest(this.state.DomainSelectArray);
+      AllExplicitFinalSavedValue = ItemInfo.ExplicitUsecase;
+      AllExplicitFinalSavedIDValue=ItemInfo.ExplicitUsecaseKey;
+
+
+        this.setState({ExplicitSelectArray:ItemInfo.ExplicitUsecaseKey.split(',').map(Number)});
+    this.setState({ExplicitSelectedTextArray:ItemInfo.ExplicitUsecase.split(',')});
+    AllExplicitFinalSavedValue = ItemInfo.ExplicitUsecase;
+   AllExplicitFinalSavedIDValue=ItemInfo.ExplicitUsecaseKey;
+
+    this.setState({DataSoftwareRestrictionSelectArray:ItemInfo.SoftwareRestrictionKey.split(',').map(Number)});
+    this.setState({DataSoftwareRestrictionSelectedTextArray:ItemInfo.SoftwareRestriction.split(',')});
+
+   AllDataSoftwareRestrictionFinalSavedValue= ItemInfo.SoftwareRestriction;
+   AllDataSoftwareRestrictionFinalSavedIDValue=ItemInfo.SoftwareRestrictionKey;
+
+
+    this.setState({DataClassificationSelectArray:ItemInfo.DataClassificationKey.split(',').map(Number)});
+    this.setState({DataClassificationSelectedTextArray:ItemInfo.DataClassification.split(',')});
+   AllDataClassificationFinalSavedValue =ItemInfo.DataClassification;
+   AllDataClassificationFinalSavedIDValue=ItemInfo.DataClassificationKey;
 
 
 
  CategoryValue=ItemInfo.Category
  AvaliblityText=ItemInfo.Availability
- ExplicitUseCase=ItemInfo.ExplicitUsecase
- SoftwareRestriction=ItemInfo.SoftwareRestriction
+ //ExplicitUseCase=ItemInfo.ExplicitUsecase
+ //SoftwareRestriction=ItemInfo.SoftwareRestriction
  SoftwareEdition=ItemInfo.SoftwareEdition
  SoftwareScope=ItemInfo.SoftwareScope
  LicenseType=ItemInfo.LicenseType
  TypeofAIcapabilities=ItemInfo.TypeofAIcapabilities
  Dependency=ItemInfo.Dependency
- DataClassification=ItemInfo.DataClassification
+ //DataClassification=ItemInfo.DataClassification
  SoftwareMissionCriticalRating=ItemInfo.field_17
  Risks=ItemInfo.Risks
  AuthenticationMethod=ItemInfo.AuthenticationMethod
@@ -498,15 +636,15 @@ TestValue:""
         this.setState({SoftwareTitle:ItemInfo.Title})
         this.setState({Category:ItemInfo.CategoryKey})
         this.setState({MyAvailability:ItemInfo.AvailabilityKey})
-        this.setState({MyExplicitUsecaseValue:ItemInfo.ExplicitUsecaseKey})
-        this.setState({MySoftwareRestrictionValue:ItemInfo.SoftwareRestrictionKey})
+        //this.setState({MyExplicitUsecaseValue:ItemInfo.ExplicitUsecaseKey})
+        //this.setState({MySoftwareRestrictionValue:ItemInfo.SoftwareRestrictionKey})
         this.setState({MySoftwareScopeValue:ItemInfo.SoftwareScopeKey})
         this.setState({MySoftwareEditionValue:ItemInfo.SoftwareEditionkey})
         this.setState({MyLicenseType:ItemInfo.LicenseTypekey})
         this.setState({AiCapablities:ItemInfo.TypeofAIcapabilitieskey})
         this.setState({MyDependency:ItemInfo.Dependencykey})
 
-        this.setState({MyDataClassifications:ItemInfo.DataClassificationKey})
+        //this.setState({MyDataClassifications:ItemInfo.DataClassificationKey})
         this.setState({SoftwareMissionCrticalRating:ItemInfo.SoftwareMissionCriticalRatingkey})
         this.setState({MyRiskvalue:ItemInfo.RisksKey})
         this.setState({AuthenticationMethod:ItemInfo.AuthenticationMethodKey})
@@ -667,76 +805,262 @@ else
    
       }
 
+      if (ItemInfo.Title == 'one')
+      {
 
-    }
+
+     this.setState({ExplicitSelectArray:ItemInfo.ExplicitUsecaseKey.split(',').map(Number)});
+    this.setState({ExplicitSelectedTextArray:ItemInfo.ExplicitUsecase.split(',')});
+    AllExplicitFinalSavedValue = ItemInfo.ExplicitUsecase;
+   AllExplicitFinalSavedIDValue=ItemInfo.ExplicitUsecaseKey;
+
+    this.setState({DataSoftwareRestrictionSelectArray:ItemInfo.SoftwareRestrictionKey.split(',').map(Number)});
+    this.setState({DataSoftwareRestrictionSelectedTextArray:ItemInfo.SoftwareRestriction.split(',')});
+
+   AllDataSoftwareRestrictionFinalSavedValue= ItemInfo.SoftwareRestriction;
+   AllDataSoftwareRestrictionFinalSavedIDValue=ItemInfo.SoftwareRestrictionKey;
+
+
+    this.setState({DataClassificationSelectArray:ItemInfo.DataClassificationKey.split(',').map(Number)});
+    this.setState({DataClassificationSelectedTextArray:ItemInfo.ExplicitUsecase.split(',')});
+   AllDataClassificationFinalSavedValue =ItemInfo.DataClassification;
+   AllDataClassificationFinalSavedIDValue=ItemInfo.DataClassificationKey;
 
 
 
-   var data = await this._service.GetAllSoftwareRestrictions();
-
-    console.log(data);
-
-    var AllSoftwareRestrictions: any = [];
-
-    for (var k in data) {
-
-      AllSoftwareRestrictions.push({ key: data[k].ID, text: data[k].Title});
-    }
-
-    console.log(AllSoftwareRestrictions);
-
-    
-   this.setState({ SoftwareRestrictionItems: AllSoftwareRestrictions });
+      }
   
 
   }
-
-  private hadleSoftwareRestriction(event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): void {
-
-    
-    this.setState({ MySoftwareRestrictionValue:item.key });
-
-    SoftwareRestriction=item.text;
-
-    console.log(SoftwareRestriction);
-
-    
   }
+
+  
 
   public async GetAllAllExplicitUsecase() {
 
-    var data = await this._service.GetAllExplicitUsecase();
- 
-     console.log(data);
- 
-     var AllExplicitUsecase: any = [];
- 
-     for (var k in data) {
- 
-       AllExplicitUsecase.push({ key: data[k].ID, text: data[k].Title});
-     }
- 
-     console.log(AllExplicitUsecase);
- 
-     
-    this.setState({ ExplicitUsecaseItems: AllExplicitUsecase });
    
- 
-   }
- 
-   private hadleExplicitUsecase(event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): void {
- 
-     
-     this.setState({ MyExplicitUsecaseValue:item.key });
- 
-     ExplicitUseCase=item.text;
- 
-     console.log(ExplicitUseCase);
- 
-     
-   }
+      var data = await this._service.GetAllExplicitUsecase();
+  
+      console.log(data);
+  
+      var AllExplicitcases: any = [];
+  
+      for (var k in data) {
+  
+        AllExplicitcases.push({ key: data[k].ID, text: data[k].Title});
+      }
+  
+      console.log(AllExplicitcases);
+  
+      
+     this.setState({ ExplicitUsecaseItems: AllExplicitcases });
+    
+  
+    }
 
 
+   private async handleExplicitusecase(event: React.FormEvent<HTMLDivElement>, item: IComboBoxOption)
+    {
+
+if (item.selected === true) {
+    // ✅ When item is checked
+    AllExplicitUsecaseSelected.push({ key: item.key, text: item.text });
+
+    AllExplicitSavedValues.push(item.text);
+    AllExplicitSavedIDValues.push(item.key);
+
+    const updatedKeys: string[] = [...this.state.ExplicitSelectArray, item.key as string];
+    const updatedTexts: string[] = [...this.state.ExplicitSelectedTextArray, item.text as string];
+
+    this.setState({
+      ExplicitSelectArray: updatedKeys,
+      ExplicitSelectedTextArray: updatedTexts,
+    });
+
+    const AllDomainstingValues: string[] = updatedTexts;
+    const AllDomainIDvalues: string[] = updatedKeys.map((k: string) => k.toString());
+
+    AllExplicitFinalSavedValue = AllDomainstingValues.map((text: string) => text.trim()).join(",");
+    AllExplicitFinalSavedIDValue = AllDomainIDvalues.map((text: string) => text.trim()).join(",");
+
+    // 🔹 Convert AllExplicitSavedIDValues to a comma-separated string
+    const AllExplicitSavedIDString: string = AllExplicitSavedIDValues.map((id: string) => id.toString().trim()).join(",");
+    console.log("AllExplicitSavedIDString (checked):", AllExplicitSavedIDString);
+
+  } else {
+    // ❌ When item is unchecked (remove it from arrays)
+    const updatedKeys: string[] = this.state.ExplicitSelectArray.filter((k: string) => k !== item.key);
+    const updatedTexts: string[] = this.state.ExplicitSelectedTextArray.filter((t: string) => t !== item.text);
+
+    this.setState({
+      ExplicitSelectArray: updatedKeys,
+      ExplicitSelectedTextArray: updatedTexts,
+    });
+
+    AllExplicitUsecaseSelected = AllExplicitUsecaseSelected.filter((u: { key: string; text: string }) => u.key !== item.key);
+    AllExplicitSavedValues = AllExplicitSavedValues.filter((v: string) => v !== item.text);
+    AllExplicitSavedIDValues = AllExplicitSavedIDValues.filter((v: string) => v !== item.key);
+
+    AllExplicitFinalSavedValue = updatedTexts.map((text: string) => text.trim()).join(",");
+    AllExplicitFinalSavedIDValue = updatedKeys.map((k: string) => k.toString().trim()).join(",");
+
+    
+  // const AllExplicitSavedIDString: string = (AllExplicitSavedIDValues || [])
+  //     .map((id: string) => id?.toString().trim())
+  //     .join(",");
+
+    console.log("🟡 Unchecked:");
+    console.log("AllExplicitFinalSavedValue:", AllExplicitFinalSavedValue);
+    console.log("AllExplicitFinalSavedIDValue:", AllExplicitFinalSavedIDValue);
+    //console.log("AllExplicitSavedIDString:", AllExplicitSavedIDString);
+  }
+     
+     
+ 
+
+    }
+
+
+  private async handleDataSoftwareRestriction(event: React.FormEvent<HTMLDivElement>, item: IComboBoxOption) {
+  if (item.selected === true) {
+    // ✅ When item is checked
+    AllDataSoftwareRestrictionSelected.push({ key: item.key as string, text: item.text as string });
+
+    AllDataSoftwareRestrictionSavedValues.push(item.text as string);
+    AllDataSoftwareRestrictionSavedIDValues.push(item.key as string);
+
+    const updatedKeys: string[] = [...this.state.DataSoftwareRestrictionSelectArray, item.key as string];
+    const updatedTexts: string[] = [...this.state.DataSoftwareRestrictionSelectedTextArray, item.text as string];
+
+    this.setState({
+      DataSoftwareRestrictionSelectArray: updatedKeys,
+      DataSoftwareRestrictionSelectedTextArray: updatedTexts,
+    });
+
+    const AllDomainStringValues: string[] = updatedTexts;
+    const AllDomainIDValues: string[] = updatedKeys.map((k: string) => k.toString());
+
+    AllDataSoftwareRestrictionFinalSavedValue = AllDomainStringValues.map((text: string) => text.trim()).join(",");
+    AllDataSoftwareRestrictionFinalSavedIDValue = AllDomainIDValues.map((text: string) => text.trim()).join(",");
+
+    // 🔹 Convert AllDataSoftwareRestrictionSavedIDValues to a comma-separated string
+    const AllDataSoftwareRestrictionSavedIDString: string = (AllDataSoftwareRestrictionSavedIDValues || [])
+      .map((id: string) => id?.toString().trim())
+      .join(",");
+
+    console.log("✅ Checked:");
+    console.log("AllDataSoftwareRestrictionFinalSavedValue:", AllDataSoftwareRestrictionFinalSavedValue);
+    console.log("AllDataSoftwareRestrictionFinalSavedIDValue:", AllDataSoftwareRestrictionFinalSavedIDValue);
+    console.log("AllDataSoftwareRestrictionSavedIDString:", AllDataSoftwareRestrictionSavedIDString);
+  } else {
+    // ❌ When item is unchecked (remove it from arrays)
+    const updatedKeys: string[] = this.state.DataSoftwareRestrictionSelectArray.filter(
+      (k: string) => k !== item.key
+    );
+    const updatedTexts: string[] = this.state.DataSoftwareRestrictionSelectedTextArray.filter(
+      (t: string) => t !== item.text
+    );
+
+    this.setState({
+      DataSoftwareRestrictionSelectArray: updatedKeys,
+      DataSoftwareRestrictionSelectedTextArray: updatedTexts,
+    });
+
+    AllDataSoftwareRestrictionSelected = AllDataSoftwareRestrictionSelected.filter(
+      (u: { key: string; text: string }) => u.key !== item.key
+    );
+    AllDataSoftwareRestrictionSavedValues = AllDataSoftwareRestrictionSavedValues.filter(
+      (v: string) => v !== item.text
+    );
+    AllDataSoftwareRestrictionSavedIDValues = AllDataSoftwareRestrictionSavedIDValues.filter(
+      (v: string) => v !== item.key
+    );
+
+    AllDataSoftwareRestrictionFinalSavedValue = updatedTexts.map((text: string) => text.trim()).join(",");
+    AllDataSoftwareRestrictionFinalSavedIDValue = updatedKeys.map((k: string) => k.toString().trim()).join(",");
+
+    // ✅ Rebuild the comma-separated string safely after uncheck
+    const AllDataSoftwareRestrictionSavedIDString: string = (AllDataSoftwareRestrictionSavedIDValues || [])
+      .map((id: string) => id?.toString().trim())
+      .join(",");
+
+    console.log("🟡 Unchecked:");
+    console.log("AllDataSoftwareRestrictionFinalSavedValue:", AllDataSoftwareRestrictionFinalSavedValue);
+    console.log("AllDataSoftwareRestrictionFinalSavedIDValue:", AllDataSoftwareRestrictionFinalSavedIDValue);
+    console.log("AllDataSoftwareRestrictionSavedIDString:", AllDataSoftwareRestrictionSavedIDString);
+  }
+}
+
+
+   private async handleDataClassification(event: React.FormEvent<HTMLDivElement>, item: IComboBoxOption) {
+  if (item.selected === true) {
+    // ✅ When item is checked
+    AllDataClassificationSelected.push({ key: item.key as string, text: item.text as string });
+
+    AllDataClassificationSavedValues.push(item.text as string);
+    AllDataClassificationSavedIDValues.push(item.key as string);
+
+    const updatedKeys: string[] = [...this.state.DataClassificationSelectArray, item.key as string];
+    const updatedTexts: string[] = [...this.state.DataClassificationSelectedTextArray, item.text as string];
+
+    this.setState({
+      DataClassificationSelectArray: updatedKeys,
+      DataClassificationSelectedTextArray: updatedTexts,
+    });
+
+    const AllDomainStringValues: string[] = updatedTexts;
+    const AllDomainIDValues: string[] = updatedKeys.map((k: string) => k.toString());
+
+    AllDataClassificationFinalSavedValue = AllDomainStringValues.map((text: string) => text.trim()).join(",");
+    AllDataClassificationFinalSavedIDValue = AllDomainIDValues.map((text: string) => text.trim()).join(",");
+
+    // 🔹 Convert AllDataClassificationSavedIDValues to a comma-separated string
+    const AllDataClassificationSavedIDString: string = (AllDataClassificationSavedIDValues || [])
+      .map((id: string) => id?.toString().trim())
+      .join(",");
+
+    console.log("✅ Checked:");
+    console.log("AllDataClassificationFinalSavedValue:", AllDataClassificationFinalSavedValue);
+    console.log("AllDataClassificationFinalSavedIDValue:", AllDataClassificationFinalSavedIDValue);
+    console.log("AllDataClassificationSavedIDString:", AllDataClassificationSavedIDString);
+  } else {
+    // ❌ When item is unchecked (remove it from arrays)
+    const updatedKeys: string[] = this.state.DataClassificationSelectArray.filter(
+      (k: string) => k !== item.key
+    );
+    const updatedTexts: string[] = this.state.DataClassificationSelectedTextArray.filter(
+      (t: string) => t !== item.text
+    );
+
+    this.setState({
+      DataClassificationSelectArray: updatedKeys,
+      DataClassificationSelectedTextArray: updatedTexts,
+    });
+
+    AllDataClassificationSelected = AllDataClassificationSelected.filter(
+      (u: { key: string; text: string }) => u.key !== item.key
+    );
+    AllDataClassificationSavedValues = AllDataClassificationSavedValues.filter(
+      (v: string) => v !== item.text
+    );
+    AllDataClassificationSavedIDValues = AllDataClassificationSavedIDValues.filter(
+      (v: string) => v !== item.key
+    );
+
+    AllDataClassificationFinalSavedValue = updatedTexts.map((text: string) => text.trim()).join(",");
+    AllDataClassificationFinalSavedIDValue = updatedKeys.map((k: string) => k.toString().trim()).join(",");
+
+    // ✅ Rebuild the comma-separated string safely after uncheck
+    const AllDataClassificationSavedIDString: string = (AllDataClassificationSavedIDValues || [])
+      .map((id: string) => id?.toString().trim())
+      .join(",");
+
+    console.log("🟡 Unchecked:");
+    console.log("AllDataClassificationFinalSavedValue:", AllDataClassificationFinalSavedValue);
+    console.log("AllDataClassificationFinalSavedIDValue:", AllDataClassificationFinalSavedIDValue);
+    console.log("AllDataClassificationSavedIDString:", AllDataClassificationSavedIDString);
+  }
+}
    public async GetAllSoftwareScope() {
 
     var data = await this._service.GetAllSoftwareScope();
@@ -860,17 +1184,17 @@ else
  
    }
  
-   private hadleDataClassifications(event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): void {
+  //  private hadleDataClassifications(event: React.FormEvent<HTMLDivElement>, item: IDropdownOption): void {
  
      
-     this.setState({ MyDataClassifications:item.key });
+  //    this.setState({ MyDataClassifications:item.key });
  
-     DataClassification=item.text;
+  //    DataClassification=item.text;
  
-     console.log(DataClassification);
+  //    console.log(DataClassification);
  
      
-   }
+  //  }
 
 
    public async GetAllRisks() {
@@ -1664,269 +1988,269 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
       alert('Please enter Software Title')
     }
 
-     else if(this.state.Category=='')
-      {
+  //    else if(this.state.Category=='')
+  //     {
 
-      alert('Please select Category')
-      }
+  //     alert('Please select Category')
+  //     }
 
-  else if(this.state.MyAvailability=='')
-  {
+  // else if(this.state.MyAvailability=='')
+  // {
 
-  alert('Please select Availability')
-  }
+  // alert('Please select Availability')
+  // }
 
-  else if(this.state.Description=='')
-  {
+  // else if(this.state.Description=='')
+  // {
 
-  alert('Please enter Description')
-  }
+  // alert('Please enter Description')
+  // }
 
-  else if(this.state.MyExplicitUsecaseValue=='')
-   {
-     alert('please select ExplicitUsecase')
+  // else if(this.state.MyExplicitUsecaseValue=='')
+  //  {
+  //    alert('please select ExplicitUsecase')
 
-  }
+  // }
   
-  else if(this.state.MySoftwareRestrictionValue=='')
-  {
+  // else if(this.state.MySoftwareRestrictionValue=='')
+  // {
 
-  alert('please select Software Restriction')
-  }
+  // alert('please select Software Restriction')
+  // }
 
-   else if(this.state.SoftwareRestrictionNotes=='')
-  {
+  //  else if(this.state.SoftwareRestrictionNotes=='')
+  // {
 
-   alert('please enter Software Restriction Notes')
-  }
+  //  alert('please enter Software Restriction Notes')
+  // }
 
-  else if(this.state.PublisherVendorProvider=='')
-  {
+  // else if(this.state.PublisherVendorProvider=='')
+  // {
 
-  alert('please enter Publisher/Vendor/Provider')
+  // alert('please enter Publisher/Vendor/Provider')
 
-   } 
-   else if(this.state.MySoftwareScopeValue=='')
-  {
+  //  } 
+  //  else if(this.state.MySoftwareScopeValue=='')
+  // {
 
-   alert('please select Software Scope')
-  }
+  //  alert('please select Software Scope')
+  // }
 
-  else if(this.state.MySoftwareEditionValue=='')
-  {
+  // else if(this.state.MySoftwareEditionValue=='')
+  // {
   
-   alert('please select Software Edition')
-  }
+  //  alert('please select Software Edition')
+  // }
 
-  else if(this.state.MyyesNoLiceReq=='')
-  {
+  // else if(this.state.MyyesNoLiceReq=='')
+  // {
     
-  alert('please select License Requirement')
-  }
+  // alert('please select License Requirement')
+  // }
 
-  else if(this.state.MyLicenseType=='')
-   {
+  // else if(this.state.MyLicenseType=='')
+  //  {
       
-          alert('please select License Type')
-  }
+  //         alert('please select License Type')
+  // }
     
-   else if(this.state.MyYesnoAICap=='')
-    {
+  //  else if(this.state.MyYesnoAICap=='')
+  //   {
         
-      alert('please select Any AI capabilities')
-   }
+  //     alert('please select Any AI capabilities')
+  //  }
 
-    else if(this.state.AiCapablities=='')
-     {
+  //   else if(this.state.AiCapablities=='')
+  //    {
           
-      alert('please select Type of AI capabilities')
-       }
+  //     alert('please select Type of AI capabilities')
+  //      }
 
-   else if(this.state.MyDependency=='')
-    {
+  //  else if(this.state.MyDependency=='')
+  //   {
             
-        alert('please select Dependency')
-  }
+  //       alert('please select Dependency')
+  // }
 
-       else if(this.state.MyDataClassifications=='')
-         {
+  //      else if(this.state.MyDataClassifications=='')
+  //        {
               
-        alert('please select DataClassifications')
-         }
+  //       alert('please select DataClassifications')
+  //        }
 
 
-       else if(this.state.SoftwareMissionCrticalRating=='')
-       {
+  //      else if(this.state.SoftwareMissionCrticalRating=='')
+  //      {
                 
-             alert('please select Software Mission CrticalRating')
-       }
+  //            alert('please select Software Mission CrticalRating')
+  //      }
 
-          else if(this.state.MyRiskvalue=='')
-           {
+  //         else if(this.state.MyRiskvalue=='')
+  //          {
                   
-              alert('please select Risks')
-            }
+  //             alert('please select Risks')
+  //           }
 
-               else if(this.state.RiskNotes=='')
-                {
+  //              else if(this.state.RiskNotes=='')
+  //               {
                     
-                alert('please enter Risk Notes')
-               }
+  //               alert('please enter Risk Notes')
+  //              }
 
-               else if(this.state.AuthenticationMethod=='')
-                {
+  //              else if(this.state.AuthenticationMethod=='')
+  //               {
                       
-                  alert('please select Authentication Method')
-                  }
+  //                 alert('please select Authentication Method')
+  //                 }
 
-                else if(this.state.AuthorizationMethod=='')
-                   {
+  //               else if(this.state.AuthorizationMethod=='')
+  //                  {
                         
-                  alert('please select Authorization Method')
-                   }
+  //                 alert('please select Authorization Method')
+  //                  }
         
     
-                    else if(this.state.MyDiscovery=='')
-                     {
+  //                   else if(this.state.MyDiscovery=='')
+  //                    {
                           
-                    alert('please select Discovery Source')
-                    }
+  //                   alert('please select Discovery Source')
+  //                   }
 
 
-                       else if(this.state.MyBusinessOwner=='')
-                          {
+  //                      else if(this.state.MyBusinessOwner=='')
+  //                         {
                               
-                          alert('please select Business Owner')
-                        }
+  //                         alert('please select Business Owner')
+  //                       }
 
-                        else if(this.state.BussniessOwenr=='')
-                         {
+  //                       else if(this.state.BussniessOwenr=='')
+  //                        {
                                 
-                           alert('please select Business Owner Name')
-                           }
+  //                          alert('please select Business Owner Name')
+  //                          }
 
-                           else if(this.state.SystemORTechnicalOwnerchoice=='')
-                           {
+  //                          else if(this.state.SystemORTechnicalOwnerchoice=='')
+  //                          {
                                   
-                          alert('please select System/Technical Owner')
-                             }
+  //                         alert('please select System/Technical Owner')
+  //                            }
 
 
-                               else if(myFinalSystemOwner=='')
+  //                              else if(myFinalSystemOwner=='')
 
-                                {
+  //                               {
 
-                                  alert('please select System/Technical Owner Name/s')
-
-
-                                  }
+  //                                 alert('please select System/Technical Owner Name/s')
 
 
-                               else if(this.state.DecisionStatus=='')
-                                 {
+  //                                 }
+
+
+  //                              else if(this.state.DecisionStatus=='')
+  //                                {
                                       
-                                alert('please select Decision Status')
-                                   }
+  //                               alert('please select Decision Status')
+  //                                  }
 
 
-                                  else if(this.state.DecisionNotes=='')
-                                   {
+  //                                 else if(this.state.DecisionNotes=='')
+  //                                  {
                                         
-                                   alert('please enter Decision Notes')
-                                   }
+  //                                  alert('please enter Decision Notes')
+  //                                  }
 
                                             
-                                  else if(this.state.dtReviewDate=='')
-                                   {
+  //                                 else if(this.state.dtReviewDate=='')
+  //                                  {
                                         
-                                   alert('please select  Review Date')
-                                    }
+  //                                  alert('please select  Review Date')
+  //                                   }
 
 
-                                   else if(this.state.ReviewedBy=='')
-                                     {
+  //                                  else if(this.state.ReviewedBy=='')
+  //                                    {
                                           
-                                     alert('please select Review By')
-                                      }
+  //                                    alert('please select Review By')
+  //                                     }
 
 
-                                     else if(this.state.ReviewFrequency=='')
-                                        {
+  //                                    else if(this.state.ReviewFrequency=='')
+  //                                       {
                                             
-                                        alert('please select Review Frequency')
-                                       }
+  //                                       alert('please select Review Frequency')
+  //                                      }
 
 
-                                       else if(this.state.dtNextReviewDate=='')
-                                         {
+  //                                      else if(this.state.dtNextReviewDate=='')
+  //                                        {
                                               
-                                           alert('please select Next Review Date')
-                                          }
+  //                                          alert('please select Next Review Date')
+  //                                         }
 
-                                         else if(this.state.dtNextReviewDate=='')
-                                           {
+  //                                        else if(this.state.dtNextReviewDate=='')
+  //                                          {
                                                 
-                                         alert('please select Next Review Date')
-                                           }
+  //                                        alert('please select Next Review Date')
+  //                                          }
 
-                                            else if(this.state.dtApprovalEndDate=='')
-                                              {
+  //                                           else if(this.state.dtApprovalEndDate=='')
+  //                                             {
                                                   
-                                            alert('please select Approval End Date')
-                                              }
+  //                                           alert('please select Approval End Date')
+  //                                             }
 
 
-                                              else if(this.state.EMPPolicy=='')
-                                                 {
+  //                                             else if(this.state.EMPPolicy=='')
+  //                                                {
                                                     
-                                               alert('please select EMP Policy')
-                                               }
+  //                                              alert('please select EMP Policy')
+  //                                              }
 
-                                               else if(this.state.EMPWorkstyle=='')
-                                                 {
+  //                                              else if(this.state.EMPWorkstyle=='')
+  //                                                {
                                                       
-                                                   alert('please select EMP Workstyle')
-                                                   }
+  //                                                  alert('please select EMP Workstyle')
+  //                                                  }
     
 
-                                                  else if(this.state.RiskManagement=='')
-                                                     {
+  //                                                 else if(this.state.RiskManagement=='')
+  //                                                    {
                                                         
-                                                   alert('please enter Risk Management Tracker Reference ')
-                                                   }
+  //                                                  alert('please enter Risk Management Tracker Reference ')
+  //                                                  }
       
 
-                                                    else if(this.state.SNOWReference=='')
-                                                {
+  //                                                   else if(this.state.SNOWReference=='')
+  //                                               {
                                                           
-                                                     alert('please enter SNOW Reference ')
-                                                    }
+  //                                                    alert('please enter SNOW Reference ')
+  //                                                   }
 
-                                                   else if(this.state.JiraReference=='')
-                                                      {
+  //                                                  else if(this.state.JiraReference=='')
+  //                                                     {
                                                             
-                                                    alert('please enter Jira Reference')
-                                                        }
+  //                                                   alert('please enter Jira Reference')
+  //                                                       }
 
 
-                                                         else if(this.state.SoftwareLocation=='')
-                                                          {
+  //                                                        else if(this.state.SoftwareLocation=='')
+  //                                                         {
                                                               
-                                                           alert('please select software location')
-                                                        }
+  //                                                          alert('please select software location')
+  //                                                       }
 
-                                                        else if(this.state.Comments=='')
-                                                           {
+  //                                                       else if(this.state.Comments=='')
+  //                                                          {
                                                                 
-                                                             alert('please enter Comments')
-                                                           }
+  //                                                            alert('please enter Comments')
+  //                                                          }
 
 
-                                                          else if(this.state.ToggleHidevalue=='')
-                                                         {
+  //                                                         else if(this.state.ToggleHidevalue=='')
+  //                                                        {
 
-                                                             alert('Do you want to hide the Software')
-                                                           }
+  //                                                            alert('Do you want to hide the Software')
+  //                                                          }
 
 
                                                                       else
@@ -1937,7 +2261,8 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
                                                                       this.setState({ showupdatebutton: true});
                                                                       this.setState({ showSavebutton: true});
 
-
+                                                                     if(this.state.dtReviewDate!='')
+                                                                     {
 
                                                                       let date1=(this.state.dtReviewDate.getDate());
 
@@ -1948,6 +2273,10 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
                                                                    let year1 =(this.state.dtReviewDate.getFullYear());
 
                                                                   FinalReviewDate=month1+'/'+date1+'/' +year1;
+                                                                     }
+
+                                                                     if(this.state.dtNextReviewDate!="")
+                                                                     {
 
                                                                    console.log(FinalReviewDate);
                                                                  let date2=(this.state.dtNextReviewDate.getDate());
@@ -1961,6 +2290,10 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
                                                              console.log(year2);
                                                              FinalNextReviewDate=month2+'/'+date2+'/' +year2;
                                                              console.log(FinalNextReviewDate);
+                                                                     }
+
+                                                            if(this.state.dtApprovalEndDate!="")
+                                                            {
 
                                                             let date3=(this.state.dtApprovalEndDate.getDate());
 
@@ -1971,19 +2304,21 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
                                                         let year3 =(this.state.dtApprovalEndDate.getFullYear());
 
                                                          console.log(year3);
-                                                        FinalApprovalDate=month2+'/'+date3 +'/' +year2;
+                                                        FinalApprovalDate=month3+'/'+date3 +'/' +year3;
                                                         console.log(FinalApprovalDate);
+
+                                                            }
 
                                                         const categorynumber = Number(this.state.Category);
                                                         const Avaliblitynumber=Number(this.state.MyAvailability);
-                                                        const ExplicitUsecaseKeynumber=Number(this.state.MyExplicitUsecaseValue);
-                                                        const SoftwareRestrictionKey=Number(this.state.MySoftwareRestrictionValue);
+                                                        //const ExplicitUsecaseKeynumber=Number(this.state.MyExplicitUsecaseValue);
+                                                        //const SoftwareRestrictionKey=Number(this.state.MySoftwareRestrictionValue);
                                                         const SoftwareScopeKey=Number(this.state.MySoftwareScopeValue);
                                                         const SoftwareEditionkey=Number(this.state.MySoftwareEditionValue);
                                                         const LicenseTypekey=Number(this.state.MyLicenseType);
                                                         const TypeofAIcapabilitieskey=Number(this.state.AiCapablities);
                                                         const MyDependencykey=Number(this.state.MyDependency);
-                                                        const MyDataClassificationKey=Number(this.state.MyDataClassifications);
+                                                        //const MyDataClassificationKey=Number(this.state.MyDataClassifications);
                                                         const MySoftwareMissionCriticalRatingkey=Number(this.state.SoftwareMissionCrticalRating);
                                                         const MyRisksKey=Number(this.state.MyRiskvalue);
                                                         const MyAuthenticationMethodKey=Number(this.state.AuthenticationMethod);
@@ -2010,10 +2345,14 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
                                                                         Avaliblitynumber,
 
                                                                       this.state.Description,
-                                                                      ExplicitUseCase,
-                                                                      ExplicitUsecaseKeynumber,
-                                                                      SoftwareRestriction,
-                                                                      SoftwareRestrictionKey,
+                                                                      //Explicit
+                                                                      AllExplicitFinalSavedValue,
+                                                                      AllExplicitFinalSavedIDValue,
+                                                                      //End
+
+                                                                      AllDataSoftwareRestrictionFinalSavedValue ,
+                                                                      AllDataSoftwareRestrictionFinalSavedIDValue ,
+
                                                                       this.state.SoftwareRestrictionNotes,
                                                                       this.state.PublisherVendorProvider,
                                                                       SoftwareScope,
@@ -2031,8 +2370,10 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
                                                                       TypeofAIcapabilitieskey,
                                                                       Dependency,
                                                                       MyDependencykey,
-                                                                      DataClassification,
-                                                                      MyDataClassificationKey,
+
+                                                                      AllDataClassificationFinalSavedValue,
+                                                                      AllDataClassificationFinalSavedIDValue,
+
                                                                       SoftwareMissionCriticalRating,
                                                                       MySoftwareMissionCriticalRatingkey,
                                                                                Risks,
@@ -2138,152 +2479,152 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
       alert('Please enter Software Title')
     }
 
-     else if(this.state.Category=='')
-      {
+  //    else if(this.state.Category=='')
+  //     {
 
-      alert('Please select Category')
-      }
+  //     alert('Please select Category')
+  //     }
 
-  else if(this.state.MyAvailability=='')
-  {
+  // else if(this.state.MyAvailability=='')
+  // {
 
-  alert('Please select Availability')
-  }
+  // alert('Please select Availability')
+  // }
 
-  else if(this.state.Description=='')
-  {
+  // else if(this.state.Description=='')
+  // {
 
-  alert('Please enter Description')
-  }
+  // alert('Please enter Description')
+  // }
 
-  else if(this.state.MyExplicitUsecaseValue=='')
-   {
-     alert('please select ExplicitUsecase')
+  // else if(this.state.MyExplicitUsecaseValue=='')
+  //  {
+  //    alert('please select ExplicitUsecase')
 
-  }
+  // }
   
-  else if(this.state.MySoftwareRestrictionValue=='')
-  {
+  // else if(this.state.MySoftwareRestrictionValue=='')
+  // {
 
-  alert('please select Software Restriction')
-  }
+  // alert('please select Software Restriction')
+  // }
 
-   else if(this.state.SoftwareRestrictionNotes=='')
-  {
+  //  else if(this.state.SoftwareRestrictionNotes=='')
+  // {
 
-   alert('please enter Software Restriction Notes')
-  }
+  //  alert('please enter Software Restriction Notes')
+  // }
 
-  else if(this.state.PublisherVendorProvider=='')
-  {
+  // else if(this.state.PublisherVendorProvider=='')
+  // {
 
-  alert('please enter Publisher/Vendor/Provider')
+  // alert('please enter Publisher/Vendor/Provider')
 
-   } 
-   else if(this.state.MySoftwareScopeValue=='')
-  {
+  //  } 
+  //  else if(this.state.MySoftwareScopeValue=='')
+  // {
 
-   alert('please select Software Scope')
-  }
+  //  alert('please select Software Scope')
+  // }
 
-  else if(this.state.MySoftwareEditionValue=='')
-  {
+  // else if(this.state.MySoftwareEditionValue=='')
+  // {
   
-   alert('please select Software Edition')
-  }
+  //  alert('please select Software Edition')
+  // }
 
-  else if(this.state.MyyesNoLiceReq=='')
-  {
+  // else if(this.state.MyyesNoLiceReq=='')
+  // {
     
-  alert('please select License Requirement')
-  }
+  // alert('please select License Requirement')
+  // }
 
-  else if(this.state.MyLicenseType=='')
-   {
+  // else if(this.state.MyLicenseType=='')
+  //  {
       
-          alert('please select License Type')
-  }
+  //         alert('please select License Type')
+  // }
     
-   else if(this.state.MyYesnoAICap=='')
-    {
+  //  else if(this.state.MyYesnoAICap=='')
+  //   {
         
-      alert('please select Any AI capabilities')
-   }
+  //     alert('please select Any AI capabilities')
+  //  }
 
-    else if(this.state.AiCapablities=='')
-     {
+  //   else if(this.state.AiCapablities=='')
+  //    {
           
-      alert('please select Type of AI capabilities')
-       }
+  //     alert('please select Type of AI capabilities')
+  //      }
 
-   else if(this.state.MyDependency=='')
-    {
+  //  else if(this.state.MyDependency=='')
+  //   {
             
-        alert('please select Dependency')
-  }
+  //       alert('please select Dependency')
+  // }
 
-       else if(this.state.MyDataClassifications=='')
-         {
+  //      else if(this.state.MyDataClassifications=='')
+  //        {
               
-        alert('please select DataClassifications')
-         }
+  //       alert('please select DataClassifications')
+  //        }
 
 
-       else if(this.state.SoftwareMissionCrticalRating=='')
-       {
+  //      else if(this.state.SoftwareMissionCrticalRating=='')
+  //      {
                 
-             alert('please select Software Mission CrticalRating')
-       }
+  //            alert('please select Software Mission CrticalRating')
+  //      }
 
-          else if(this.state.MyRiskvalue=='')
-           {
+  //         else if(this.state.MyRiskvalue=='')
+  //          {
                   
-              alert('please select Risks')
-            }
+  //             alert('please select Risks')
+  //           }
 
-               else if(this.state.RiskNotes=='')
-                {
+  //              else if(this.state.RiskNotes=='')
+  //               {
                     
-                alert('please enter Risk Notes')
-               }
+  //               alert('please enter Risk Notes')
+  //              }
 
-               else if(this.state.AuthenticationMethod=='')
-                {
+  //              else if(this.state.AuthenticationMethod=='')
+  //               {
                       
-                  alert('please select Authentication Method')
-                  }
+  //                 alert('please select Authentication Method')
+  //                 }
 
-                else if(this.state.AuthorizationMethod=='')
-                   {
+  //               else if(this.state.AuthorizationMethod=='')
+  //                  {
                         
-                  alert('please select Authorization Method')
-                   }
+  //                 alert('please select Authorization Method')
+  //                  }
         
     
-                    else if(this.state.MyDiscovery=='')
-                     {
+  //                   else if(this.state.MyDiscovery=='')
+  //                    {
                           
-                    alert('please select Discovery Source')
-                    }
+  //                   alert('please select Discovery Source')
+  //                   }
 
 
-                       else if(this.state.MyBusinessOwner=='')
-                          {
+  //                      else if(this.state.MyBusinessOwner=='')
+  //                         {
                               
-                          alert('please select Business Owner')
-                        }
+  //                         alert('please select Business Owner')
+  //                       }
 
-                        else if(this.state.BussniessOwenr=='')
-                         {
+  //                       else if(this.state.BussniessOwenr=='')
+  //                        {
                                 
-                           alert('please select Business Owner Name')
-                           }
+  //                          alert('please select Business Owner Name')
+  //                          }
 
-                           else if(this.state.SystemORTechnicalOwnerchoice=='')
-                           {
+  //                          else if(this.state.SystemORTechnicalOwnerchoice=='')
+  //                          {
                                   
-                          alert('please select System/Technical Owner')
-                             }
+  //                         alert('please select System/Technical Owner')
+  //                            }
 
 
                               //  else if(myFinalSystemOwner=='')
@@ -2296,111 +2637,111 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
                               //     }
 
 
-                               else if(this.state.DecisionStatus=='')
-                                 {
+                              //  else if(this.state.DecisionStatus=='')
+                              //    {
                                       
-                                alert('please select Decision Status')
-                                   }
+                              //   alert('please select Decision Status')
+                              //      }
 
 
-                                  else if(this.state.DecisionNotes=='')
-                                   {
+                              //     else if(this.state.DecisionNotes=='')
+                              //      {
                                         
-                                   alert('please enter Decision Notes')
-                                   }
+                              //      alert('please enter Decision Notes')
+                              //      }
 
                                             
-                                  else if(this.state.dtReviewDate=='')
-                                   {
+                              //     else if(this.state.dtReviewDate=='')
+                              //      {
                                         
-                                   alert('please select  Review Date')
-                                    }
+                              //      alert('please select  Review Date')
+                              //       }
 
 
-                                   else if(this.state.ReviewedBy=='')
-                                     {
+                              //      else if(this.state.ReviewedBy=='')
+                              //        {
                                           
-                                     alert('please select Review By')
-                                      }
+                              //        alert('please select Review By')
+                              //         }
 
 
-                                     else if(this.state.ReviewFrequency=='')
-                                        {
+                              //        else if(this.state.ReviewFrequency=='')
+                              //           {
                                             
-                                        alert('please select Review Frequency')
-                                       }
+                              //           alert('please select Review Frequency')
+                              //          }
 
 
-                                       else if(this.state.dtNextReviewDate=='')
-                                         {
+                              //          else if(this.state.dtNextReviewDate=='')
+                              //            {
                                               
-                                           alert('please select Next Review Date')
-                                          }
+                              //              alert('please select Next Review Date')
+                              //             }
 
-                                         else if(this.state.dtNextReviewDate=='')
-                                           {
+                              //            else if(this.state.dtNextReviewDate=='')
+                              //              {
                                                 
-                                         alert('please select Next Review Date')
-                                           }
+                              //            alert('please select Next Review Date')
+                              //              }
 
-                                            else if(this.state.dtApprovalEndDate=='')
-                                              {
+                              //               else if(this.state.dtApprovalEndDate=='')
+                              //                 {
                                                   
-                                            alert('please select Approval End Date')
-                                              }
+                              //               alert('please select Approval End Date')
+                              //                 }
 
 
-                                              else if(this.state.EMPPolicy=='')
-                                                 {
+                              //                 else if(this.state.EMPPolicy=='')
+                              //                    {
                                                     
-                                               alert('please select EMP Policy')
-                                               }
+                              //                  alert('please select EMP Policy')
+                              //                  }
 
-                                               else if(this.state.EMPWorkstyle=='')
-                                                 {
+                              //                  else if(this.state.EMPWorkstyle=='')
+                              //                    {
                                                       
-                                                   alert('please select EMP Workstyle')
-                                                   }
+                              //                      alert('please select EMP Workstyle')
+                              //                      }
     
 
-                                                  else if(this.state.RiskManagement=='')
-                                                     {
+                              //                     else if(this.state.RiskManagement=='')
+                              //                        {
                                                         
-                                                   alert('please enter Risk Management Tracker Reference ')
-                                                   }
+                              //                      alert('please enter Risk Management Tracker Reference ')
+                              //                      }
       
 
-                                                    else if(this.state.SNOWReference=='')
-                                                {
+                              //                       else if(this.state.SNOWReference=='')
+                              //                   {
                                                           
-                                                     alert('please enter SNOW Reference ')
-                                                    }
+                              //                        alert('please enter SNOW Reference ')
+                              //                       }
 
-                                                   else if(this.state.JiraReference=='')
-                                                      {
+                              //                      else if(this.state.JiraReference=='')
+                              //                         {
                                                             
-                                                    alert('please enter Jira Reference')
-                                                        }
+                              //                       alert('please enter Jira Reference')
+                              //                           }
 
 
-                                                         else if(this.state.SoftwareLocation=='')
-                                                          {
+                              //                            else if(this.state.SoftwareLocation=='')
+                              //                             {
                                                               
-                                                           alert('please select software location')
-                                                        }
+                              //                              alert('please select software location')
+                              //                           }
 
-                                                        else if(this.state.Comments=='')
-                                                           {
+                              //                           else if(this.state.Comments=='')
+                              //                              {
                                                                 
-                                                             alert('please enter Comments')
-                                                           }
+                              //                                alert('please enter Comments')
+                              //                              }
 
 
-                                                          else if(this.state.ToggleHidevalue=='')
-                                                         {
+                              //                             else if(this.state.ToggleHidevalue=='')
+                              //                            {
 
-                                                             alert('Do you want to hide the Software')
-                                                           }
+                              //                                alert('Do you want to hide the Software')
+                              //                              }
 
 
                                                                      else
@@ -2409,6 +2750,8 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
                                                                       this.setState({ showupdatebutton: true});
                                                                       this.setState({ showSavebutton: true});
 
+                                                                      if(this.state.dtReviewDate!="")
+                                                                      {
 
                                                                       let date4=(this.state.dtReviewDate.getDate());
 
@@ -2422,8 +2765,14 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
 
                                                                    console.log(FinalReviewDate);
 
+                                                                      }
 
-                                                                 let date5=(this.state.dtNextReviewDate.getDate());
+
+                                                        
+                                                            if(this.state.dtNextReviewDate!="")
+                                                            {
+
+                                                          let date5=(this.state.dtNextReviewDate.getDate());
 
                                                                  console.log(date5);
 
@@ -2436,7 +2785,12 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
                                                              console.log(FinalNextReviewDate);
 
 
-                                                            let date6=(this.state.dtApprovalEndDate.getDate());
+                                                            }
+
+                                                  if(this.state.dtApprovalEndDate!="")
+                                                  {
+
+                                                      let date6=(this.state.dtApprovalEndDate.getDate());
 
                                                             console.log(date6);
 
@@ -2445,19 +2799,23 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
                                                         let year3 =(this.state.dtApprovalEndDate.getFullYear());
 
                                                          console.log(year3);
-                                                        FinalApprovalDate=month2+'/'+date6 +'/' +year2;
+                                                        FinalApprovalDate=month3+'/'+date6 +'/' +year3;
                                                         console.log(FinalApprovalDate);
+
+                                                  }
+
+                                                          
 
                                                          const categorynumber = Number(this.state.Category);
                                                          const Avaliblitynumber=Number(this.state.MyAvailability);
-                                                         const ExplicitUsecaseKeynumber=Number(this.state.MyExplicitUsecaseValue);
-                                                         const SoftwareRestrictionKey=Number(this.state.MySoftwareRestrictionValue);
+                                                         //const ExplicitUsecaseKeynumber=Number(this.state.MyExplicitUsecaseValue);
+                                                         //const SoftwareRestrictionKey=Number(this.state.MySoftwareRestrictionValue);
                                                          const SoftwareScopeKey=Number(this.state.MySoftwareScopeValue);
                                                          const SoftwareEditionkey=Number(this.state.MySoftwareEditionValue);
                                                          const LicenseTypekey=Number(this.state.MyLicenseType);
                                                          const TypeofAIcapabilitieskey=Number(this.state.AiCapablities);
                                                          const MyDependencykey=Number(this.state.MyDependency);
-                                                         const MyDataClassificationKey=Number(this.state.MyDataClassifications);
+                                                         //const MyDataClassificationKey=Number(this.state.MyDataClassifications);
                                                          const MySoftwareMissionCriticalRatingkey=Number(this.state.SoftwareMissionCrticalRating);
                                                          const MyRisksKey=Number(this.state.MyRiskvalue);
                                                          const MyAuthenticationMethodKey=Number(this.state.AuthenticationMethod);
@@ -2485,10 +2843,13 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
                                                                         Avaliblitynumber,
 
                                                                       this.state.Description,
-                                                                      ExplicitUseCase,
-                                                                      ExplicitUsecaseKeynumber,
-                                                                      SoftwareRestriction,
-                                                                      SoftwareRestrictionKey,
+
+                                                                      AllExplicitFinalSavedValue,
+                                                                      AllExplicitFinalSavedIDValue,
+
+                                                                      AllDataSoftwareRestrictionFinalSavedValue,
+                                                                      AllDataSoftwareRestrictionFinalSavedIDValue,
+
                                                                       this.state.SoftwareRestrictionNotes,
                                                                       this.state.PublisherVendorProvider,
                                                                       SoftwareScope,
@@ -2506,8 +2867,10 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
                                                                       TypeofAIcapabilitieskey,
                                                                       Dependency,
                                                                       MyDependencykey,
-                                                                      DataClassification,
-                                                                      MyDataClassificationKey,
+
+                                                                      AllDataClassificationFinalSavedValue,
+                                                                      AllDataClassificationFinalSavedIDValue,
+
                                                                       SoftwareMissionCriticalRating,
                                                                       MySoftwareMissionCriticalRatingkey,
                                                                                Risks,
@@ -2584,7 +2947,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
                                                                       
                                                             
                                                                      alert('Record updated successfully ');
-                                                                     window.location.replace("https://capcoinc.sharepoint.com/sites/CapcoSoftwareCatalogue/");
+                                                                    window.location.replace("https://capcoinc.sharepoint.com/sites/CapcoSoftwareCatalogue/");
                                                                                                                             
                                                                       
                                                                       
@@ -2601,9 +2964,9 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
         <Stack tokens={stackTokens} styles={stackStyles} >
         <Stack>
 
-      <b><label className={styles.labelsFonts}>1. Software Title <label className={styles.recolorss}>*</label></label></b><br/>  
+      <b><label className={styles.labelsFonts}>1. Software Title <label className={styles.recolorss}>*</label> </label></b><br/>  
       <input type="text" className={styles.boxsize} name="txtsoftwareTitle" value={this.state.SoftwareTitle} onChange={this.changesoftwareTitle.bind(this)}/><br></br>
-      <b><label className={styles.labelsFonts}>2. Category <label className={styles.recolorss}>*</label></label></b><br/> 
+      <b><label className={styles.labelsFonts}>2. Category </label></b><br/> 
       <Dropdown className={styles.onlyFont}
   placeholder="Select  Category"
   options={this.state.CategoryItems}
@@ -2612,7 +2975,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   <br></br> 
 
       
-      <b><label className={styles.labelsFonts}>3. Availability <label className={styles.recolorss}>*</label></label></b><br/>  
+      <b><label className={styles.labelsFonts}>3. Availability </label></b><br/>  
       
       <Dropdown className={styles.onlyFont}
   placeholder="Select  Avaliblity"
@@ -2621,35 +2984,55 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   selectedKey={this.state.MyAvailability ? this.state.MyAvailability : undefined} onChange={this.hadleAvaliblity.bind(this)} />
   <br></br>
 
-      <b><label className={styles.labelsFonts}>4. Description <label className={styles.recolorss}>*</label></label></b><br/> 
+      <b><label className={styles.labelsFonts}>4. Description </label></b><br/> 
       <textarea name="txtdescription" value={this.state.Description} onChange={this.changeDescription.bind(this)} className={styles.boxsize1}/><br></br> 
       
-      <b><label className={styles.labelsFonts}>5. Explicit Use-case <label className={styles.recolorss}>*</label></label></b><br/> 
+      <b><label className={styles.labelsFonts}>5. Explicit Use-case </label></b><br/> 
       
-      <Dropdown className={styles.onlyFont}
+      {/* <Dropdown className={styles.onlyFont}
   placeholder="Select  Explicit Use case"
   options={this.state.ExplicitUsecaseItems}
   styles={dropdownStyles}
-  selectedKey={this.state.MyExplicitUsecaseValue ? this.state.MyExplicitUsecaseValue : undefined} onChange={this.hadleExplicitUsecase.bind(this)} />
+  selectedKey={this.state.MyExplicitUsecaseValue ? this.state.MyExplicitUsecaseValue : undefined} onChange={this.hadleExplicitUsecase.bind(this)} /> */}
+
+  <ComboBox  styles={comboBoxStyles}
+         placeholder="Select  Explicit Use case"
+         options={this.state.ExplicitUsecaseItems}
+         onChange={this.handleExplicitusecase.bind(this)}
+         selectedKey={this.state.ExplicitSelectArray}
+         defaultSelectedKey={this.state.ExplicitSelectArray}
+         
+         //onSelect={this.handleDomains.bind(this)}
+         
+          multiSelect={true}>
+            </ComboBox>
   <br></br>
 
-      <b><label className={styles.labelsFonts}>6. Software Restriction <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>6. Software Restriction </label></b><br/>
 
-  <Dropdown className={styles.onlyFont}
-  placeholder="Select  Software  Restriction"
-  options={this.state.SoftwareRestrictionItems}
-  styles={dropdownStyles}
-  selectedKey={this.state.MySoftwareRestrictionValue ? this.state.MySoftwareRestrictionValue : undefined} onChange={this.hadleSoftwareRestriction.bind(this)} />
+
+  <ComboBox  styles={comboBoxStyles}
+         placeholder="Select  Software Restriction Items"
+         options={this.state.SoftwareRestrictionItems}
+         onChange={this.handleDataSoftwareRestriction.bind(this)}
+         selectedKey={this.state.DataSoftwareRestrictionSelectArray}
+         defaultSelectedKey={this.state.DataSoftwareRestrictionSelectArray}
+         
+         //onSelect={this.handleDomains.bind(this)}
+         
+          multiSelect={true}>
+            </ComboBox>
+
   <br></br>
 
 
-      <b><label className={styles.labelsFonts}>7. Software Restriction Notes <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>7. Software Restriction Notes </label></b><br/>
       <textarea name="txtSoftwareRestrictionNotes" value={this.state.SoftwareRestrictionNotes} onChange={this.changeSoftwareRestrictionNotes.bind(this)} className={styles.boxsize1}/><br></br> 
 
-      <b><label className={styles.labelsFonts}>8. Publisher/Vendor/Provider <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>8. Publisher/Vendor/Provider </label></b><br/>
       <textarea name="txtPublisherVendorProvider" value={this.state.PublisherVendorProvider} onChange={this.changePublisherVendorProvider.bind(this)} className={styles.boxsize}/><br></br> 
 
-      <b><label className={styles.labelsFonts}>9. Software Scope <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>9. Software Scope </label></b><br/>
       
       <Dropdown className={styles.onlyFont}
   placeholder="Select  Software  Scope"
@@ -2658,7 +3041,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   selectedKey={this.state.MySoftwareScopeValue ? this.state.MySoftwareScopeValue : undefined} onChange={this.hadleSoftwareScope.bind(this)} />
   <br></br>
 
-    <b><label className={styles.labelsFonts}>10. Software Edition <label className={styles.recolorss}>*</label></label></b><br/>
+    <b><label className={styles.labelsFonts}>10. Software Edition </label></b><br/>
     <Dropdown className={styles.onlyFont}
   placeholder="Select  Software  Edition"
   options={this.state.SoftwareEditionItems}
@@ -2666,13 +3049,13 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   selectedKey={this.state.MySoftwareEditionValue ? this.state.MySoftwareEditionValue : undefined} onChange={this.hadleSoftwareEditions.bind(this)} />
   <br></br>
 
-      <b><label className={styles.labelsFonts}>11. License Requirement <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>11. License Requirement </label></b><br/>
 
 <ChoiceGroup  id="rdblicreq"  name="rdbliceReq"  options={RadioLiceseRequirment}   onChange={this.hadleYesNoLicenseReq.bind(this)}  selectedKey={this.state.MyyesNoLiceReq}/> 
 <br></br>
 
 
-<b><label className={styles.labelsFonts}>12. License Type <label className={styles.recolorss}>*</label></label></b><br/>
+<b><label className={styles.labelsFonts}>12. License Type </label></b><br/>
 
   <Dropdown className={styles.onlyFont}
   placeholder="Select  License Type"
@@ -2681,13 +3064,13 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   selectedKey={this.state.MyLicenseType ? this.state.MyLicenseType : undefined} onChange={this.hadleLicenseType.bind(this)} />
   <br></br>
 
-<b><label className={styles.labelsFonts}>13. Any AI capabilities <label className={styles.recolorss}>*</label></label></b><br/>
+<b><label className={styles.labelsFonts}>13. Any AI capabilities </label></b><br/>
 
 <ChoiceGroup  id="Toggle"  name="AnyAICapablties"   options={RadioAICapblities}   onChange={this.hadleYesNoAICap.bind(this)}  selectedKey={this.state.MyYesnoAICap}/> 
 <br></br>
 
      
-      <b><label className={styles.labelsFonts}>14. Type of AI capabilities <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>14. Type of AI capabilities </label></b><br/>
       <Dropdown className={styles.onlyFont}
   placeholder="Select  Type of AI Capalities"
   options={this.state.AiCapablitiesItems}
@@ -2695,7 +3078,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   selectedKey={this.state.AiCapablities ? this.state.AiCapablities : undefined} onChange={this.hadleSTypeofAIcapabilities.bind(this)} />
   <br></br>
 
-      <b><label className={styles.labelsFonts}>15. Dependency <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>15. Dependency </label></b><br/>
       <Dropdown className={styles.onlyFont}
   placeholder="Select  Dependency"
   options={this.state.DependencyItems}
@@ -2704,17 +3087,23 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   <br></br>
 
   
-      <b><label className={styles.labelsFonts}>16. Data Classification <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>16. Data Classification </label></b><br/>
       
-      <Dropdown className={styles.onlyFont}
-  placeholder="Select  DataClassifications"
-  options={this.state.DataClassificationsItems}
-  styles={dropdownStyles}
-  selectedKey={this.state.MyDataClassifications ? this.state.MyDataClassifications : undefined} onChange={this.hadleDataClassifications.bind(this)} />
+<ComboBox  styles={comboBoxStyles}
+         placeholder="Select  Data Classification Items"
+         options={this.state.DataClassificationsItems}
+         onChange={this.handleDataClassification.bind(this)}
+         selectedKey={this.state.DataClassificationSelectArray}
+         defaultSelectedKey={this.state.DataClassificationSelectArray}
+         
+         //onSelect={this.handleDomains.bind(this)}
+         
+          multiSelect={true}>
+            </ComboBox>
   <br></br>
 
 
-      <b><label className={styles.labelsFonts}>17. Software Mission Critical Rating  <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>17. Software Mission Critical Rating  </label></b><br/>
 
       <Dropdown className={styles.onlyFont}
   placeholder="Select  Software Mission Critical Rating"
@@ -2723,7 +3112,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   selectedKey={this.state.SoftwareMissionCrticalRating ? this.state.SoftwareMissionCrticalRating : undefined} onChange={this.hadleSoftwareMissionCrticalRating.bind(this)} />
   <br></br>
 
-      <b><label className={styles.labelsFonts}>18. Risks <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>18. Risks </label></b><br/>
       <Dropdown className={styles.onlyFont}
   placeholder="Select  Risks"
   options={this.state.RiskItems}
@@ -2733,10 +3122,10 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
 
 
 
-      <b><label className={styles.labelsFonts}>19. Risk Notes  <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>19. Risk Notes  </label></b><br/>
       <textarea name="txtRiskNotes" value={this.state.RiskNotes} onChange={this.changeRiskNotes.bind(this)} className={styles.boxsize1}/><br></br> 
 
-      <b><label className={styles.labelsFonts}>20. Authentication Method <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>20. Authentication Method </label></b><br/>
       <Dropdown className={styles.onlyFont}
   placeholder="Select  AuthenticationMethod"
   options={this.state.AuthenticationMethodItems}
@@ -2744,7 +3133,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   selectedKey={this.state.AuthenticationMethod ? this.state.AuthenticationMethod : undefined} onChange={this.hadleAuthenticationMethod.bind(this)} />
   <br></br>
 
-      <b><label className={styles.labelsFonts}>21. Authorization Method <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>21. Authorization Method </label></b><br/>
       <Dropdown className={styles.onlyFont}
   placeholder="Select  AuthorizationMethod"
   options={this.state.AuthorizationMethodItems}
@@ -2753,7 +3142,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   <br></br>
 
 
-      <b><label className={styles.labelsFonts}>22. Discovery Source <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>22. Discovery Source </label></b><br/>
       <Dropdown className={styles.onlyFont}
   placeholder="Select  Discovery Source"
   options={this.state.DiscoveryItems}
@@ -2761,7 +3150,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   selectedKey={this.state.MyDiscovery ? this.state.MyDiscovery : undefined} onChange={this.hadleDiscover.bind(this)} />
   <br></br>
 
-      <b><label className={styles.labelsFonts}>23. Business Owner <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>23. Business Owner </label></b><br/>
 
       <Dropdown className={styles.onlyFont}
   placeholder="Select  Bussiness Owner"
@@ -2770,7 +3159,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   selectedKey={this.state.MyBusinessOwner ? this.state.MyBusinessOwner : undefined} onChange={this.hadleBussinessOwner.bind(this)} />
   <br></br>
 
-      <b><label className={styles.labelsFonts}>24. Business Owner Name <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>24. Business Owner Name </label></b><br/>
 <div className={styles.boxsize}> 
       <PeoplePicker 
                   context={this.props.context}
@@ -2791,7 +3180,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
 
       </div><br></br>
 
-      <b><label className={styles.labelsFonts}>25. System/Technical Owner <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>25. System/Technical Owner </label></b><br/>
 
       <Dropdown className={styles.onlyFont}
   placeholder="Select System/Technical Owner"
@@ -2800,7 +3189,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   selectedKey={this.state.SystemORTechnicalOwnerchoice ? this.state.SystemORTechnicalOwnerchoice : undefined} onChange={this.hadleSystemorTechnicalOwner.bind(this)} />
   <br></br>
 
-      <b><label className={styles.labelsFonts}>26. System/Technical Owner Name/s <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>26. System/Technical Owner Name/s </label></b><br/>
       <div className={styles.boxsize}>
 
       <PeoplePicker 
@@ -2820,7 +3209,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
       
       </div>
 <br></br>
-      <b><label className={styles.labelsFonts}>27. Decision Status <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>27. Decision Status </label></b><br/>
       <Dropdown className={styles.onlyFont}
   placeholder="Select  Decision Status"
   options={this.state.DecisionStatusItems}
@@ -2828,12 +3217,12 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   selectedKey={this.state.DecisionStatus ? this.state.DecisionStatus : undefined} onChange={this.hadleDecisionStatus.bind(this)} />
   <br></br>
 
-      <b><label className={styles.labelsFonts}>28. Decision Notes <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>28. Decision Notes </label></b><br/>
       <textarea name="txtDecisionNotes" value={this.state.DecisionNotes} onChange={this.changeDecisionNotes.bind(this)} className={styles.boxsize1}/><br></br> 
 
 
 
-<b><label className={styles.labelsFonts}>29. Review Date <label className={styles.recolorss}>*</label></label></b><br/>
+<b><label className={styles.labelsFonts}>29. Review Date </label></b><br/>
 
 <div className={styles.welcome}>
 <DatePicker id="dtReviewDate" placeholder="Select a date..."
@@ -2850,7 +3239,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
 
     
       
-      <b><label className={styles.labelsFonts}>30. Reviewed By <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>30. Reviewed By </label></b><br/>
       
       <div className={styles.boxsize}>
 
@@ -2871,7 +3260,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
 
 
       </div><br></br>
-      <b><label className={styles.labelsFonts}>31. Review Frequency <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>31. Review Frequency </label></b><br/>
 
   <Dropdown className={styles.onlyFont}
   placeholder="Select  Review Frequency"
@@ -2880,7 +3269,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   selectedKey={this.state.ReviewFrequency ? this.state.ReviewFrequency : undefined} onChange={this.hadleReviewFrequency.bind(this)} />
 
      <br></br>
-<b><label className={styles.labelsFonts}>32. Next Review Date <label className={styles.recolorss}>*</label></label></b><br/>
+<b><label className={styles.labelsFonts}>32. Next Review Date </label></b><br/>
 
 <div className={styles.welcome}>
 <DatePicker id="dtNextReviewDate" placeholder="Select a date..."
@@ -2895,7 +3284,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
 
 <br></br>
 
-<b><label className={styles.labelsFonts}>33. Approval End Date <label className={styles.recolorss}>*</label></label></b><br/>
+<b><label className={styles.labelsFonts}>33. Approval End Date </label></b><br/>
 <div className={styles.welcome}>
 <DatePicker id="dtNextReviewDate" placeholder="Select a date..."
                             onSelectDate={this._onSelectApprovalEndDate}
@@ -2908,7 +3297,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
 </div>
 
 <br></br>
-      <b><label className={styles.labelsFonts}>34. EMP Policy <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>34. EMP Policy </label></b><br/>
 
       <Dropdown className={styles.onlyFont}
   placeholder="Select  EMP Policy "
@@ -2917,7 +3306,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   selectedKey={this.state.EMPPolicy ? this.state.EMPPolicy : undefined} onChange={this.hadleEMPPolicy.bind(this)} />
   <br></br>
 
-      <b><label className={styles.labelsFonts}>35. EMP Workstyle <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>35. EMP Workstyle </label></b><br/>
 
       <Dropdown className={styles.onlyFont}
   placeholder="Select EMP Workstyle "
@@ -2926,17 +3315,17 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   selectedKey={this.state.EMPWorkstyle ? this.state.EMPWorkstyle : undefined} onChange={this.hadleEMPWorkstyle.bind(this)} />
   <br></br>
 
-      <b><label className={styles.labelsFonts}>36. Risk Management Tracker Reference <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>36. Risk Management Tracker Reference </label></b><br/>
       <input type="text" className={styles.boxsize} name="txtRiskMangment" value={this.state.RiskManagement} onChange={this.changesRiskManagement.bind(this)}/><br></br>
 
-      <b><label className={styles.labelsFonts}>37. SNOW Reference <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>37. SNOW Reference </label></b><br/>
       <input type="text" className={styles.boxsize} name="txtsnowRefrence" value={this.state.SNOWReference} onChange={this.changeSNOWReference.bind(this)}/><br></br>
 
-      <b><label className={styles.labelsFonts}>38. Jira Reference <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>38. Jira Reference </label></b><br/>
       <input type="text" className={styles.boxsize} name="txtJiraRefernce" value={this.state.JiraReference} onChange={this.changeJiraRefrence.bind(this)}/><br></br>
 
       
-      <b><label className={styles.labelsFonts}>39. Software Location <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>39. Software Location </label></b><br/>
       <Dropdown className={styles.onlyFont}
   placeholder="Select Software Location "
   options={this.state.SoftwareLocationItems}
@@ -2944,10 +3333,10 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   selectedKey={this.state.SoftwareLocation ? this.state.SoftwareLocation : undefined} onChange={this.hadleSoftwareLocation.bind(this)} />
   <br></br>
 
-      <b><label className={styles.labelsFonts}>40. Comments <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>40. Comments </label></b><br/>
       <textarea name="txtComments" value={this.state.Comments} onChange={this.changeComments.bind(this)} className={styles.boxsize1}/><br></br>
 
-      <b><label className={styles.labelsFonts}>41. Hidden <label className={styles.recolorss}>*</label></label></b><br/>
+      <b><label className={styles.labelsFonts}>41. Hidden </label></b><br/>
       <ChoiceGroup  id="Toggle"  name="ToggleOptions"  defaultSelectedKey={this.state.ToggleHidevalue} options={Radiotest}   onChange={this.ToggleHide.bind(this)}  selectedKey={this.state.ToggleHidevalue}/> 
       <br></br>
        
