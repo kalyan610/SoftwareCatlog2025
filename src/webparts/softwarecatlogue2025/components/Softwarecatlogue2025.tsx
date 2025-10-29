@@ -3190,7 +3190,7 @@ private hadleYesNoAICap(event: React.FormEvent<HTMLDivElement>, item: IDropdownO
   <br></br>
 
       <b><label className={styles.labelsFonts}>26. System/Technical Owner Name/s </label></b><br/>
-      <div className={styles.boxsize}>
+      <div className={styles.myPepboxsize}>
 
       <PeoplePicker 
                   context={this.props.context}

@@ -130,3 +130,23 @@
   font-weight: $ms-font-weight-regular;
 
 }
+
+
+.myPepboxsize {
+  width: 40%;              /* keep your preferred width */
+  min-width: 250px;        /* optional safety for smaller screens */
+  max-width: 100%;         /* ensure it doesn’t overflow */
+
+  height: auto;            /* let PeoplePicker expand naturally */
+  min-height: 36px;        /* ensures proper clickable space */
+
+  font-size: medium;
+  font-family: "Cambria";
+  font-weight: 400;        /* replace SCSS variable with actual value */
+
+  box-sizing: border-box;  /* keeps consistent sizing */
+  display: block;          /* makes width/height work predictably */
+
+  /* optional cosmetic tweak */
+  margin-bottom: 10px;     /* small spacing between controls */
+}
